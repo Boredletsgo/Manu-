@@ -13,6 +13,7 @@ import {
 
 import { streamChat } from "../../lib/api";
 import { theme } from "../../lib/theme";
+import { useTheme } from "../../lib/ThemeContext";
 
 interface Message {
   id: string;
@@ -27,6 +28,7 @@ const GREETING: Message = {
 };
 
 export default function ChatScreen() {
+  const { colors: c } = useTheme();
   const [messages, setMessages] = useState<Message[]>([GREETING]);
   const [input, setInput] = useState("");
   const [sending, setSending] = useState(false);
@@ -81,7 +83,7 @@ export default function ChatScreen() {
 
   return (
     <KeyboardAvoidingView
-      style={styles.screen}
+      style={[styles.screen, { backgroundColor: c.bg }]}
       behavior={Platform.OS === "ios" ? "padding" : undefined}
       keyboardVerticalOffset={90}
     >
@@ -97,10 +99,12 @@ export default function ChatScreen() {
             <View
               style={[
                 styles.bubble,
-                isUser ? styles.userBubble : styles.tutorBubble,
+                isUser
+                  ? [styles.userBubble, { backgroundColor: c.primary }]
+                  : [styles.tutorBubble, { backgroundColor: c.card, borderColor: c.cardBorder }],
               ]}
             >
-              <Text style={[styles.bubbleText, isUser && styles.userText]}>
+              <Text style={[styles.bubbleText, { color: isUser ? c.onPrimary : c.text }]}>
                 {item.text || "…"}
               </Text>
             </View>
@@ -108,13 +112,13 @@ export default function ChatScreen() {
         }}
       />
 
-      <View style={styles.inputRow}>
+      <View style={[styles.inputRow, { borderTopColor: c.cardBorder, backgroundColor: c.card }]}>
         <TextInput
-          style={styles.input}
+          style={[styles.input, { backgroundColor: c.inputBg, borderColor: c.cardBorder, color: c.text }]}
           value={input}
           onChangeText={setInput}
           placeholder="Ask about a sign…"
-          placeholderTextColor={theme.colors.muted}
+          placeholderTextColor={c.muted}
           multiline
           editable={!sending}
           onSubmitEditing={onSend}
@@ -124,13 +128,14 @@ export default function ChatScreen() {
           disabled={sending || !input.trim()}
           style={[
             styles.sendBtn,
+            { backgroundColor: c.primary },
             (sending || !input.trim()) && styles.sendBtnDisabled,
           ]}
         >
           {sending ? (
-            <ActivityIndicator color="#fff" size="small" />
+            <ActivityIndicator color={c.onPrimary} size="small" />
           ) : (
-            <Text style={styles.sendText}>Send</Text>
+            <Text style={[styles.sendText, { color: c.onPrimary }]}>Send</Text>
           )}
         </Pressable>
       </View>

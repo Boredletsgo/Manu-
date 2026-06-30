@@ -14,12 +14,14 @@ import { useFocusEffect } from "expo-router";
 import { fetchSigns } from "../../lib/api";
 import { getProgress, toggleLearned } from "../../lib/storage";
 import { theme } from "../../lib/theme";
+import { useTheme } from "../../lib/ThemeContext";
 import type { Sign } from "../../lib/types";
 
 const CATEGORIES = ["all", "alphabet", "numbers", "phrases"] as const;
 type Category = (typeof CATEGORIES)[number];
 
 export default function LearnScreen() {
+  const { colors: c } = useTheme();
   const [signs, setSigns] = useState<Sign[]>([]);
   const [learned, setLearned] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
@@ -56,36 +58,46 @@ export default function LearnScreen() {
 
   if (loading) {
     return (
-      <View style={styles.center}>
-        <ActivityIndicator size="large" color={theme.colors.primary} />
-        <Text style={styles.muted}>Loading signs…</Text>
+      <View style={[styles.center, { backgroundColor: c.bg }]}>
+        <ActivityIndicator size="large" color={c.primary} />
+        <Text style={[styles.muted, { color: c.muted }]}>Loading signs…</Text>
       </View>
     );
   }
 
   if (error) {
     return (
-      <View style={styles.center}>
-        <Text style={styles.errorTitle}>Couldn't load signs</Text>
-        <Text style={styles.muted}>{error}</Text>
-        <Text style={styles.muted}>Is the backend running on :8000?</Text>
+      <View style={[styles.center, { backgroundColor: c.bg }]}>
+        <Text style={[styles.errorTitle, { color: c.danger }]}>Couldn't load signs</Text>
+        <Text style={[styles.muted, { color: c.muted }]}>{error}</Text>
+        <Text style={[styles.muted, { color: c.muted }]}>Is the backend running on :8000?</Text>
       </View>
     );
   }
 
   return (
-    <View style={styles.screen}>
+    <View style={[styles.screen, { backgroundColor: c.bg }]}>
       <View style={styles.filters}>
-        {CATEGORIES.map((c) => {
-          const active = c === category;
+        {CATEGORIES.map((cat) => {
+          const active = cat === category;
           return (
             <Pressable
-              key={c}
-              onPress={() => setCategory(c)}
-              style={[styles.chip, active && styles.chipActive]}
+              key={cat}
+              onPress={() => setCategory(cat)}
+              style={[
+                styles.chip,
+                { backgroundColor: c.chipBg, borderColor: c.cardBorder },
+                active && { backgroundColor: c.primary, borderColor: c.primary },
+              ]}
             >
-              <Text style={[styles.chipText, active && styles.chipTextActive]}>
-                {c}
+              <Text
+                style={[
+                  styles.chipText,
+                  { color: active ? c.onPrimary : c.muted },
+                  active && styles.chipTextActive,
+                ]}
+              >
+                {cat}
               </Text>
             </Pressable>
           );
@@ -99,34 +111,37 @@ export default function LearnScreen() {
         renderItem={({ item }) => {
           const isLearned = learned.includes(item.name);
           return (
-            <View style={styles.card}>
+            <View style={[styles.card, { backgroundColor: c.card, borderColor: c.cardBorder }]}>
               <Image
                 source={{ uri: item.image }}
-                style={styles.image}
+                style={[styles.image, { backgroundColor: c.feature }]}
                 resizeMode="cover"
               />
               <View style={styles.cardBody}>
                 <View style={styles.cardHeader}>
-                  <Text style={styles.signName}>{item.name}</Text>
+                  <Text style={[styles.signName, { color: c.heading }]}>{item.name}</Text>
                   <Pressable
                     onPress={() => onToggle(item.name)}
-                    style={[styles.badge, isLearned && styles.badgeLearned]}
+                    style={[
+                      styles.badge,
+                      { backgroundColor: isLearned ? c.badgeLearnedBg : c.badgeBg },
+                    ]}
                   >
                     <Text
                       style={[
                         styles.badgeText,
-                        isLearned && styles.badgeTextLearned,
+                        { color: isLearned ? c.success : c.primary },
                       ]}
                     >
                       {isLearned ? "✓ Learned" : "Mark learned"}
                     </Text>
                   </Pressable>
                 </View>
-                <Text style={styles.desc}>{item.description}</Text>
-                <Text style={styles.tip}>💡 {item.tip}</Text>
+                <Text style={[styles.desc, { color: c.text }]}>{item.description}</Text>
+                <Text style={[styles.tip, { color: c.muted }]}>💡 {item.tip}</Text>
                 {item.video ? (
                   <Pressable onPress={() => Linking.openURL(item.video!)}>
-                    <Text style={styles.videoLink}>▶ Watch on YouTube</Text>
+                    <Text style={[styles.videoLink, { color: c.primary }]}>▶ Watch on YouTube</Text>
                   </Pressable>
                 ) : null}
               </View>

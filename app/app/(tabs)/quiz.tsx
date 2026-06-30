@@ -11,6 +11,7 @@ import {
 import { fetchQuiz, fetchSigns } from "../../lib/api";
 import { recordQuizScore } from "../../lib/storage";
 import { theme } from "../../lib/theme";
+import { useTheme } from "../../lib/ThemeContext";
 import type { QuizQuestion, Sign } from "../../lib/types";
 
 function pickRandom<T>(arr: T[]): T {
@@ -18,6 +19,7 @@ function pickRandom<T>(arr: T[]): T {
 }
 
 export default function QuizScreen() {
+  const { colors: c } = useTheme();
   const [signs, setSigns] = useState<Sign[]>([]);
   const [current, setCurrent] = useState<{ sign: string; quiz: QuizQuestion } | null>(
     null
@@ -68,14 +70,14 @@ export default function QuizScreen() {
 
   if (error) {
     return (
-      <View style={styles.center}>
-        <Text style={styles.errorTitle}>Quiz unavailable</Text>
-        <Text style={styles.muted}>{error}</Text>
-        <Text style={styles.muted}>
+      <View style={[styles.center, { backgroundColor: c.bg }]}>
+        <Text style={[styles.errorTitle, { color: c.danger }]}>Quiz unavailable</Text>
+        <Text style={[styles.muted, { color: c.muted }]}>{error}</Text>
+        <Text style={[styles.muted, { color: c.muted }]}>
           Make sure the backend and Ollama are running.
         </Text>
-        <Pressable style={styles.primaryBtn} onPress={loadQuestion}>
-          <Text style={styles.primaryBtnText}>Retry</Text>
+        <Pressable style={[styles.primaryBtn, { backgroundColor: c.primary }]} onPress={loadQuestion}>
+          <Text style={[styles.primaryBtnText, { color: c.onPrimary }]}>Retry</Text>
         </Pressable>
       </View>
     );
@@ -83,9 +85,9 @@ export default function QuizScreen() {
 
   if (loading || !current) {
     return (
-      <View style={styles.center}>
-        <ActivityIndicator size="large" color={theme.colors.primary} />
-        <Text style={styles.muted}>Generating a question…</Text>
+      <View style={[styles.center, { backgroundColor: c.bg }]}>
+        <ActivityIndicator size="large" color={c.primary} />
+        <Text style={[styles.muted, { color: c.muted }]}>Generating a question…</Text>
       </View>
     );
   }
@@ -94,37 +96,40 @@ export default function QuizScreen() {
   const answered = selected !== null;
 
   return (
-    <ScrollView style={styles.screen} contentContainerStyle={styles.content}>
-      <View style={styles.card}>
-        <Text style={styles.label}>Sign: {current.sign}</Text>
-        <Text style={styles.question}>{quiz.question}</Text>
+    <ScrollView style={[styles.screen, { backgroundColor: c.bg }]} contentContainerStyle={styles.content}>
+      <View style={[styles.card, { backgroundColor: c.primaryDark }]}>
+        <Text style={[styles.label, { color: c.onPrimary, opacity: 0.8 }]}>Sign: {current.sign}</Text>
+        <Text style={[styles.question, { color: c.onPrimary }]}>{quiz.question}</Text>
       </View>
 
       {quiz.options.map((opt) => {
         const isAnswer = opt === quiz.answer;
         const isPicked = opt === selected;
-        let state = styles.option;
-        if (answered && isAnswer) state = { ...styles.option, ...styles.correct };
-        else if (answered && isPicked) state = { ...styles.option, ...styles.wrong };
+        const optStyle = [
+          styles.option,
+          { backgroundColor: c.card, borderColor: c.cardBorder },
+          answered && isAnswer && { backgroundColor: c.correctBg, borderColor: c.success },
+          answered && isPicked && !isAnswer && { backgroundColor: c.wrongBg, borderColor: c.danger },
+        ];
         return (
-          <Pressable key={opt} style={state} onPress={() => onSelect(opt)}>
-            <Text style={styles.optionText}>{opt}</Text>
-            {answered && isAnswer && <Text style={styles.mark}>✓</Text>}
+          <Pressable key={opt} style={optStyle} onPress={() => onSelect(opt)}>
+            <Text style={[styles.optionText, { color: c.text }]}>{opt}</Text>
+            {answered && isAnswer && <Text style={[styles.mark, { color: c.success }]}>✓</Text>}
             {answered && isPicked && !isAnswer && (
-              <Text style={styles.mark}>✗</Text>
+              <Text style={[styles.mark, { color: c.danger }]}>✗</Text>
             )}
           </Pressable>
         );
       })}
 
       {answered && (
-        <View style={styles.explainCard}>
-          <Text style={styles.explainTitle}>
+        <View style={[styles.explainCard, { backgroundColor: c.card, borderColor: c.cardBorder }]}>
+          <Text style={[styles.explainTitle, { color: c.heading }]}>
             {selected === quiz.answer ? "Correct! 🎉" : "Not quite"}
           </Text>
-          <Text style={styles.explainText}>{quiz.explanation}</Text>
-          <Pressable style={styles.primaryBtn} onPress={loadQuestion}>
-            <Text style={styles.primaryBtnText}>Next question →</Text>
+          <Text style={[styles.explainText, { color: c.muted }]}>{quiz.explanation}</Text>
+          <Pressable style={[styles.primaryBtn, { backgroundColor: c.primary }]} onPress={loadQuestion}>
+            <Text style={[styles.primaryBtnText, { color: c.onPrimary }]}>Next question →</Text>
           </Pressable>
         </View>
       )}

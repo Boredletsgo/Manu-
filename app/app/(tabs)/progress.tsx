@@ -10,9 +10,11 @@ import { useFocusEffect } from "expo-router";
 
 import { getProgress, resetProgress } from "../../lib/storage";
 import { theme } from "../../lib/theme";
+import { useTheme, type AppColors } from "../../lib/ThemeContext";
 import type { Progress } from "../../lib/types";
 
 export default function ProgressScreen() {
+  const { colors: c } = useTheme();
   const [progress, setProgress] = useState<Progress>({
     learned: [],
     quizScores: [],
@@ -36,42 +38,42 @@ export default function ProgressScreen() {
   }
 
   return (
-    <ScrollView style={styles.screen} contentContainerStyle={styles.content}>
+    <ScrollView style={[styles.screen, { backgroundColor: c.bg }]} contentContainerStyle={styles.content}>
       <View style={styles.statsRow}>
-        <Stat label="Signs learned" value={progress.learned.length} />
-        <Stat label="Quizzes taken" value={totalQuizzes} />
-        <Stat label="Accuracy" value={`${accuracy}%`} />
+        <Stat label="Signs learned" value={progress.learned.length} c={c} />
+        <Stat label="Quizzes taken" value={totalQuizzes} c={c} />
+        <Stat label="Accuracy" value={`${accuracy}%`} c={c} />
       </View>
 
-      <Text style={styles.sectionTitle}>Signs learned</Text>
+      <Text style={[styles.sectionTitle, { color: c.heading }]}>Signs learned</Text>
       {progress.learned.length === 0 ? (
-        <Text style={styles.muted}>
+        <Text style={[styles.muted, { color: c.muted }]}>
           None yet — mark signs as learned in the Learn tab.
         </Text>
       ) : (
         <View style={styles.tagWrap}>
           {progress.learned.map((name) => (
-            <View key={name} style={styles.tag}>
-              <Text style={styles.tagText}>{name}</Text>
+            <View key={name} style={[styles.tag, { backgroundColor: c.tagBg }]}>
+              <Text style={[styles.tagText, { color: c.primary }]}>{name}</Text>
             </View>
           ))}
         </View>
       )}
 
-      <Text style={styles.sectionTitle}>Recent quiz results</Text>
+      <Text style={[styles.sectionTitle, { color: c.heading }]}>Recent quiz results</Text>
       {totalQuizzes === 0 ? (
-        <Text style={styles.muted}>Take a quiz to see results here.</Text>
+        <Text style={[styles.muted, { color: c.muted }]}>Take a quiz to see results here.</Text>
       ) : (
         [...progress.quizScores]
           .reverse()
           .slice(0, 15)
           .map((s, i) => (
-            <View key={`${s.timestamp}-${i}`} style={styles.resultRow}>
-              <Text style={styles.resultSign}>{s.sign}</Text>
+            <View key={`${s.timestamp}-${i}`} style={[styles.resultRow, { backgroundColor: c.card, borderColor: c.cardBorder }]}>
+              <Text style={[styles.resultSign, { color: c.text }]}>{s.sign}</Text>
               <Text
                 style={[
                   styles.resultMark,
-                  { color: s.correct ? theme.colors.success : theme.colors.danger },
+                  { color: s.correct ? c.success : c.danger },
                 ]}
               >
                 {s.correct ? "✓ Correct" : "✗ Wrong"}
@@ -80,18 +82,26 @@ export default function ProgressScreen() {
           ))
       )}
 
-      <Pressable style={styles.resetBtn} onPress={onReset}>
-        <Text style={styles.resetText}>Reset progress</Text>
+      <Pressable style={[styles.resetBtn, { borderColor: c.danger }]} onPress={onReset}>
+        <Text style={[styles.resetText, { color: c.danger }]}>Reset progress</Text>
       </Pressable>
     </ScrollView>
   );
 }
 
-function Stat({ label, value }: { label: string; value: number | string }) {
+function Stat({
+  label,
+  value,
+  c,
+}: {
+  label: string;
+  value: number | string;
+  c: AppColors;
+}) {
   return (
-    <View style={styles.stat}>
-      <Text style={styles.statValue}>{value}</Text>
-      <Text style={styles.statLabel}>{label}</Text>
+    <View style={[styles.stat, { backgroundColor: c.card, borderColor: c.cardBorder }]}>
+      <Text style={[styles.statValue, { color: c.primary }]}>{value}</Text>
+      <Text style={[styles.statLabel, { color: c.muted }]}>{label}</Text>
     </View>
   );
 }

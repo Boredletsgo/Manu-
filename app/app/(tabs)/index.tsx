@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Link } from "expo-router";
 import { LinearGradient } from "expo-linear-gradient";
 import {
@@ -10,60 +9,11 @@ import {
   View,
 } from "react-native";
 
-import { Logo, LogoTheme } from "../../components/Logo";
+import { Logo } from "../../components/Logo";
 import { theme } from "../../lib/theme";
+import { useTheme } from "../../lib/ThemeContext";
 
 type Route = "/" | "/learn" | "/chat" | "/quiz" | "/progress";
-
-interface Palette {
-  bg: string;
-  navLink: string;
-  ctaBg: string;
-  ctaText: string;
-  heroFrom: string;
-  heroMid?: string;
-  heroTo: string;
-  heroTitle: string;
-  heroSub: string;
-  cardBg: string;
-  cardBorder: string;
-  cardTitle: string;
-  cardSub: string;
-  logo: LogoTheme;
-}
-
-const LIGHT: Palette = {
-  bg: "#f4f8f6",
-  navLink: theme.colors.text,
-  ctaBg: theme.colors.primaryDark,
-  ctaText: "#ffffff",
-  heroFrom: "#e8f7f3",
-  heroTo: "#b3e4dc",
-  heroTitle: "#123b39",
-  heroSub: "#3a635d",
-  cardBg: "#eef7f4",
-  cardBorder: "#d3e9e3",
-  cardTitle: "#123b39",
-  cardSub: theme.colors.muted,
-  logo: "light",
-};
-
-const DARK: Palette = {
-  bg: "#0b1a2b",
-  navLink: "#c3d4d1",
-  ctaBg: "#16b8a6",
-  ctaText: "#06241f",
-  heroFrom: "#10544c",
-  heroMid: "#0c3340",
-  heroTo: "#091826",
-  heroTitle: "#f3efe6",
-  heroSub: "#9fb6b3",
-  cardBg: "#12272b",
-  cardBorder: "#213a3c",
-  cardTitle: "#f3efe6",
-  cardSub: "#9fb6b3",
-  logo: "dark",
-};
 
 const NAV_LINKS: { href: Route; label: string }[] = [
   { href: "/", label: "Home" },
@@ -108,8 +58,23 @@ const FEATURES: FeatureCard[] = [
 export default function HomeScreen() {
   const { width } = useWindowDimensions();
   const wide = width >= 860;
-  const [dark, setDark] = useState(false);
-  const p = dark ? DARK : LIGHT;
+  const { dark, toggle, colors } = useTheme();
+  const p = {
+    bg: colors.bg,
+    navLink: colors.navLink,
+    ctaBg: colors.primaryDark,
+    ctaText: colors.onPrimary,
+    heroFrom: colors.heroFrom,
+    heroMid: colors.heroMid,
+    heroTo: colors.heroTo,
+    heroTitle: colors.heroTitle,
+    heroSub: colors.heroSub,
+    cardBg: colors.feature,
+    cardBorder: colors.featureBorder,
+    cardTitle: colors.heading,
+    cardSub: colors.muted,
+    logo: colors.logo,
+  };
 
   return (
     <ScrollView
@@ -141,7 +106,7 @@ export default function HomeScreen() {
             </View>
           ) : null}
           <Pressable
-            onPress={() => setDark((d) => !d)}
+            onPress={toggle}
             accessibilityLabel={dark ? "Switch to light theme" : "Switch to dark theme"}
             style={[styles.themeToggle, { borderColor: p.cardBorder }]}
           >

@@ -2,6 +2,7 @@ import { Tabs } from "expo-router";
 import { Text } from "react-native";
 
 import { theme } from "../../lib/theme";
+import { useTheme } from "../../lib/ThemeContext";
 
 /** Simple emoji tab icon to avoid extra icon dependencies. */
 function TabIcon({ emoji, color }: { emoji: string; color: string }) {
@@ -9,14 +10,17 @@ function TabIcon({ emoji, color }: { emoji: string; color: string }) {
 }
 
 export default function TabsLayout() {
+  const { colors } = useTheme();
   return (
     <Tabs
       screenOptions={{
-        headerStyle: { backgroundColor: theme.colors.primary },
-        headerTintColor: "#fff",
+        headerStyle: { backgroundColor: colors.headerBg },
+        headerTintColor: colors.headerTint,
         headerTitleStyle: { fontFamily: theme.fonts.heading, fontWeight: "700" },
-        tabBarActiveTintColor: theme.colors.primary,
-        tabBarInactiveTintColor: theme.colors.muted,
+        sceneContainerStyle: { backgroundColor: colors.bg },
+        tabBarStyle: { backgroundColor: colors.tabBg, borderTopColor: colors.tabBorder },
+        tabBarActiveTintColor: colors.tabActive,
+        tabBarInactiveTintColor: colors.tabInactive,
         tabBarLabelStyle: { fontFamily: theme.fonts.bodyMedium, fontSize: 11 },
       }}
     >

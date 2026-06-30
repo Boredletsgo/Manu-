@@ -9,6 +9,7 @@ import {
   View,
 } from "react-native";
 
+import { Logo } from "../../components/Logo";
 import { theme } from "../../lib/theme";
 
 type Route = "/" | "/learn" | "/chat" | "/quiz" | "/progress";
@@ -64,10 +65,7 @@ export default function HomeScreen() {
     >
       {/* Top nav bar */}
       <View style={styles.nav}>
-        <View style={styles.brand}>
-          <Text style={styles.brandMark}>🤟</Text>
-          <Text style={styles.brandName}>Manuō</Text>
-        </View>
+        <Logo markSize={wide ? 44 : 38} />
         {wide ? (
           <View style={styles.navLinks}>
             {NAV_LINKS.map((l) => (
@@ -150,15 +148,6 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     flexWrap: "wrap",
     gap: theme.spacing(1),
-  },
-  brand: { flexDirection: "row", alignItems: "center", gap: 8 },
-  brandMark: { fontSize: 26 },
-  brandName: {
-    fontSize: 24,
-    fontFamily: theme.fonts.logo,
-    fontWeight: "600",
-    letterSpacing: 0.6,
-    color: theme.colors.heading,
   },
   navLinks: {
     flexDirection: "row",

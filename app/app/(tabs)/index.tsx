@@ -9,7 +9,8 @@ import {
   View,
 } from "react-native";
 
-import { Logo } from "../../components/Logo";
+import { Logo, LogoMark } from "../../components/Logo";
+import { Icon, type IconName } from "../../components/icons";
 import { theme } from "../../lib/theme";
 import { useTheme } from "../../lib/ThemeContext";
 
@@ -25,7 +26,7 @@ const NAV_LINKS: { href: Route; label: string }[] = [
 
 interface FeatureCard {
   href: Route;
-  emoji: string;
+  icon: IconName;
   title: string;
   subtitle: string;
   cta: string;
@@ -34,21 +35,21 @@ interface FeatureCard {
 const FEATURES: FeatureCard[] = [
   {
     href: "/learn",
-    emoji: "🤟",
+    icon: "book",
     title: "Learn Signs",
     subtitle: "Browse the alphabet, numbers, and common phrases.",
     cta: "View Lessons",
   },
   {
     href: "/chat",
-    emoji: "🤖",
+    icon: "robot",
     title: "Meet Your AI Tutor",
     subtitle: "Personalized AI tutoring and interactive guidance.",
     cta: "Open AI Chat",
   },
   {
     href: "/quiz",
-    emoji: "🧠",
+    icon: "bulb",
     title: "Test Your Skills",
     subtitle: "Flashcards and quizzes to assess what you've learned.",
     cta: "Take a Quiz",
@@ -139,8 +140,16 @@ export default function HomeScreen() {
             </Link>
           </View>
           <View style={styles.heroArt}>
-            <Text style={styles.heroArtEmoji}>🧏🏽‍♀️🤟🧏🏻‍♂️</Text>
-            <Text style={styles.heroArtEmojiSm}>👋 🙌 🫶</Text>
+            <View style={[styles.heroArtTile, { borderColor: p.cardBorder }]}>
+              <View style={[styles.heroArtGlow, { backgroundColor: colors.primary, opacity: dark ? 0.18 : 0.12 }]} />
+              <LogoMark height={wide ? 150 : 112} theme={p.logo} />
+              <View style={[styles.heroSparkle, styles.heroSparkleA]}>
+                <Icon name="sparkle" size={22} color={colors.primary} />
+              </View>
+              <View style={[styles.heroSparkle, styles.heroSparkleB]}>
+                <Icon name="sparkle" size={14} color={colors.primary} />
+              </View>
+            </View>
           </View>
         </View>
       </LinearGradient>
@@ -156,7 +165,9 @@ export default function HomeScreen() {
               { backgroundColor: p.cardBg, borderColor: p.cardBorder },
             ]}
           >
-            <Text style={styles.cardEmoji}>{f.emoji}</Text>
+            <View style={[styles.cardIconWrap, { backgroundColor: colors.bg, borderColor: p.cardBorder }]}>
+              <Icon name={f.icon} size={30} color={colors.primary} />
+            </View>
             <Text style={[styles.cardTitle, { color: p.cardTitle }]}>{f.title}</Text>
             <Text style={[styles.cardSubtitle, { color: p.cardSub }]}>{f.subtitle}</Text>
             <Link href={f.href} asChild>
@@ -257,9 +268,25 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     fontSize: 16,
   },
-  heroArt: { alignItems: "center", justifyContent: "center", gap: 8 },
-  heroArtEmoji: { fontSize: 56 },
-  heroArtEmojiSm: { fontSize: 30, letterSpacing: 4 },
+  heroArt: { alignItems: "center", justifyContent: "center" },
+  heroArtTile: {
+    width: 220,
+    height: 200,
+    borderRadius: 28,
+    borderWidth: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    overflow: "hidden",
+  },
+  heroArtGlow: {
+    position: "absolute",
+    width: 240,
+    height: 240,
+    borderRadius: 999,
+  },
+  heroSparkle: { position: "absolute" },
+  heroSparkleA: { top: 26, right: 30 },
+  heroSparkleB: { bottom: 34, left: 34 },
 
   // Features
   features: { gap: theme.spacing(2) },
@@ -273,7 +300,14 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   cardWide: { flex: 1 },
-  cardEmoji: { fontSize: 44 },
+  cardIconWrap: {
+    width: 56,
+    height: 56,
+    borderRadius: 16,
+    borderWidth: 1,
+    alignItems: "center",
+    justifyContent: "center",
+  },
   cardTitle: {
     fontSize: 20,
     fontFamily: theme.fonts.heading,

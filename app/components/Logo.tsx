@@ -8,6 +8,12 @@ const ASSETS: Record<LogoTheme, { uri: string; aspect: number }> = {
   dark: { uri: "/manuo-logo-dark.png", aspect: 434 / 151 },
 };
 
+// Mark-only (handshake-M symbol), cropped from the lockups. Used on every screen.
+const MARKS: Record<LogoTheme, { uri: string; aspect: number }> = {
+  light: { uri: "/manuo-mark-light.png", aspect: 132 / 106 },
+  dark: { uri: "/manuo-mark-dark.png", aspect: 132 / 106 },
+};
+
 /** Full Manuō logo lockup (handshake-M mark + wordmark + tagline). */
 export function Logo({
   height = 44,
@@ -23,6 +29,25 @@ export function Logo({
       style={{ height, width: height * asset.aspect }}
       resizeMode="contain"
       accessibilityLabel="Manuō — Connect Through Sign"
+    />
+  );
+}
+
+/** Short Manuō logo — the handshake-M mark only, for headers and accents. */
+export function LogoMark({
+  height = 28,
+  theme = "light",
+}: {
+  height?: number;
+  theme?: LogoTheme;
+}) {
+  const asset = MARKS[theme];
+  return (
+    <Image
+      source={{ uri: asset.uri }}
+      style={{ height, width: height * asset.aspect }}
+      resizeMode="contain"
+      accessibilityLabel="Manuō"
     />
   );
 }

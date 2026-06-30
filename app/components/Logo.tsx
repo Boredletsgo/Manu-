@@ -3,9 +3,9 @@ import { Image } from "react-native";
 export type LogoTheme = "light" | "dark";
 
 const ASSETS: Record<LogoTheme, { uri: string; aspect: number }> = {
-  // Lockups cropped from the Manuō brand sheet (mark + wordmark + tagline).
-  light: { uri: "/manuo-logo-light.png", aspect: 760 / 192 },
-  dark: { uri: "/manuo-logo-dark.png", aspect: 792 / 228 },
+  // Exported Manuō brand lockups (mark + wordmark + tagline), transparent PNG.
+  light: { uri: "/manuo-logo-light.png", aspect: 404 / 131 },
+  dark: { uri: "/manuo-logo-dark.png", aspect: 434 / 151 },
 };
 
 /** Full Manuō logo lockup (handshake-M mark + wordmark + tagline). */

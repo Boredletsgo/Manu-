@@ -3,6 +3,7 @@ import {
   ActivityIndicator,
   FlatList,
   Image,
+  Linking,
   Pressable,
   StyleSheet,
   Text,
@@ -123,6 +124,11 @@ export default function LearnScreen() {
                 </View>
                 <Text style={styles.desc}>{item.description}</Text>
                 <Text style={styles.tip}>💡 {item.tip}</Text>
+                {item.video ? (
+                  <Pressable onPress={() => Linking.openURL(item.video!)}>
+                    <Text style={styles.videoLink}>▶ Watch on YouTube</Text>
+                  </Pressable>
+                ) : null}
               </View>
             </View>
           );
@@ -192,4 +198,9 @@ const styles = StyleSheet.create({
   badgeTextLearned: { color: theme.colors.success },
   desc: { marginTop: 6, color: theme.colors.text, lineHeight: 20 },
   tip: { marginTop: 6, color: theme.colors.muted, fontStyle: "italic" },
+  videoLink: {
+    marginTop: 8,
+    color: theme.colors.primary,
+    fontWeight: "700",
+  },
 });

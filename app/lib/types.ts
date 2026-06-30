@@ -6,6 +6,8 @@ export interface Sign {
   description: string;
   tip: string;
   image: string;
+  /** Link to a YouTube search/video showing the sign in motion. */
+  video?: string;
 }
 
 export interface QuizQuestion {

@@ -21,6 +21,7 @@ interface Palette {
   ctaBg: string;
   ctaText: string;
   heroFrom: string;
+  heroMid?: string;
   heroTo: string;
   heroTitle: string;
   heroSub: string;
@@ -32,32 +33,33 @@ interface Palette {
 }
 
 const LIGHT: Palette = {
-  bg: theme.colors.background,
+  bg: "#f4f8f6",
   navLink: theme.colors.text,
   ctaBg: theme.colors.primaryDark,
   ctaText: "#ffffff",
-  heroFrom: theme.colors.heroFrom,
-  heroTo: theme.colors.heroTo,
-  heroTitle: theme.colors.heading,
-  heroSub: "#33635c",
-  cardBg: theme.colors.feature,
-  cardBorder: theme.colors.border,
-  cardTitle: theme.colors.heading,
+  heroFrom: "#e8f7f3",
+  heroTo: "#b3e4dc",
+  heroTitle: "#123b39",
+  heroSub: "#3a635d",
+  cardBg: "#eef7f4",
+  cardBorder: "#d3e9e3",
+  cardTitle: "#123b39",
   cardSub: theme.colors.muted,
   logo: "light",
 };
 
 const DARK: Palette = {
-  bg: "#0c1622",
-  navLink: "#c7d3d1",
-  ctaBg: "#14b8a6",
+  bg: "#0b1a2b",
+  navLink: "#c3d4d1",
+  ctaBg: "#16b8a6",
   ctaText: "#06241f",
-  heroFrom: "#0e3f3c",
-  heroTo: "#0a1f2c",
+  heroFrom: "#10544c",
+  heroMid: "#0c3340",
+  heroTo: "#091826",
   heroTitle: "#f3efe6",
   heroSub: "#9fb6b3",
-  cardBg: "#10231f",
-  cardBorder: "#1e3a35",
+  cardBg: "#12272b",
+  cardBorder: "#213a3c",
   cardTitle: "#f3efe6",
   cardSub: "#9fb6b3",
   logo: "dark",
@@ -150,7 +152,7 @@ export default function HomeScreen() {
 
       {/* Hero */}
       <LinearGradient
-        colors={[p.heroFrom, p.heroTo]}
+        colors={p.heroMid ? [p.heroFrom, p.heroMid, p.heroTo] : [p.heroFrom, p.heroTo]}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
         style={styles.hero}

@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link } from "expo-router";
 import { LinearGradient } from "expo-linear-gradient";
 import {
@@ -9,10 +10,58 @@ import {
   View,
 } from "react-native";
 
-import { Logo } from "../../components/Logo";
+import { Logo, LogoTheme } from "../../components/Logo";
 import { theme } from "../../lib/theme";
 
 type Route = "/" | "/learn" | "/chat" | "/quiz" | "/progress";
+
+interface Palette {
+  bg: string;
+  navLink: string;
+  ctaBg: string;
+  ctaText: string;
+  heroFrom: string;
+  heroTo: string;
+  heroTitle: string;
+  heroSub: string;
+  cardBg: string;
+  cardBorder: string;
+  cardTitle: string;
+  cardSub: string;
+  logo: LogoTheme;
+}
+
+const LIGHT: Palette = {
+  bg: theme.colors.background,
+  navLink: theme.colors.text,
+  ctaBg: theme.colors.primaryDark,
+  ctaText: "#ffffff",
+  heroFrom: theme.colors.heroFrom,
+  heroTo: theme.colors.heroTo,
+  heroTitle: theme.colors.heading,
+  heroSub: "#33635c",
+  cardBg: theme.colors.feature,
+  cardBorder: theme.colors.border,
+  cardTitle: theme.colors.heading,
+  cardSub: theme.colors.muted,
+  logo: "light",
+};
+
+const DARK: Palette = {
+  bg: "#0c1622",
+  navLink: "#c7d3d1",
+  ctaBg: "#14b8a6",
+  ctaText: "#06241f",
+  heroFrom: "#0e3f3c",
+  heroTo: "#0a1f2c",
+  heroTitle: "#f3efe6",
+  heroSub: "#9fb6b3",
+  cardBg: "#10231f",
+  cardBorder: "#1e3a35",
+  cardTitle: "#f3efe6",
+  cardSub: "#9fb6b3",
+  logo: "dark",
+};
 
 const NAV_LINKS: { href: Route; label: string }[] = [
   { href: "/", label: "Home" },
@@ -57,51 +106,68 @@ const FEATURES: FeatureCard[] = [
 export default function HomeScreen() {
   const { width } = useWindowDimensions();
   const wide = width >= 860;
+  const [dark, setDark] = useState(false);
+  const p = dark ? DARK : LIGHT;
 
   return (
     <ScrollView
-      style={styles.screen}
+      style={[styles.screen, { backgroundColor: p.bg }]}
       contentContainerStyle={[styles.content, wide && styles.contentWide]}
     >
       {/* Top nav bar */}
       <View style={styles.nav}>
-        <Logo markSize={wide ? 44 : 38} />
-        {wide ? (
-          <View style={styles.navLinks}>
-            {NAV_LINKS.map((l) => (
-              <Link key={l.href} href={l.href} asChild>
-                <Pressable>
-                  <Text style={styles.navLink}>{l.label}</Text>
+        <Logo height={wide ? 46 : 38} theme={p.logo} />
+        <View style={styles.navRight}>
+          {wide ? (
+            <View style={styles.navLinks}>
+              {NAV_LINKS.map((l) => (
+                <Link key={l.href} href={l.href} asChild>
+                  <Pressable>
+                    <Text style={[styles.navLink, { color: p.navLink }]}>
+                      {l.label}
+                    </Text>
+                  </Pressable>
+                </Link>
+              ))}
+              <Link href="/learn" asChild>
+                <Pressable style={StyleSheet.flatten([styles.navCta, { backgroundColor: p.ctaBg }])}>
+                  <Text style={[styles.navCtaText, { color: p.ctaText }]}>
+                    Get Started
+                  </Text>
                 </Pressable>
               </Link>
-            ))}
-            <Link href="/learn" asChild>
-              <Pressable style={styles.navCta}>
-                <Text style={styles.navCtaText}>Get Started</Text>
-              </Pressable>
-            </Link>
-          </View>
-        ) : null}
+            </View>
+          ) : null}
+          <Pressable
+            onPress={() => setDark((d) => !d)}
+            accessibilityLabel={dark ? "Switch to light theme" : "Switch to dark theme"}
+            style={[styles.themeToggle, { borderColor: p.cardBorder }]}
+          >
+            <Text style={styles.themeToggleIcon}>{dark ? "☀️" : "🌙"}</Text>
+          </Pressable>
+        </View>
       </View>
 
       {/* Hero */}
       <LinearGradient
-        colors={[theme.colors.heroFrom, theme.colors.heroTo]}
+        colors={[p.heroFrom, p.heroTo]}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
         style={styles.hero}
       >
         <View style={[styles.heroInner, wide && styles.heroInnerWide]}>
           <View style={[styles.heroText, wide && styles.heroTextWide]}>
-            <Text style={[styles.heroTitle, wide && styles.heroTitleWide]}>
+            <Text style={[styles.heroTitle, wide && styles.heroTitleWide, { color: p.heroTitle }]}>
               Discover the visual language of connection
             </Text>
-            <Text style={styles.heroSubtitle}>
+            <Text style={[styles.heroSubtitle, { color: p.heroSub }]}>
               Master ASL with personalized AI tutoring and interactive lessons.
             </Text>
             <Link href="/learn" asChild>
-              <Pressable style={styles.heroCta}>
-                <Text style={styles.heroCtaText}>Start Learning for Free</Text>
+              <Pressable style={StyleSheet.flatten([styles.heroCta, { backgroundColor: p.ctaBg }])}>
+                <Text style={[styles.heroCtaText, { color: p.ctaText }]}>
+                  Start Learning for Free
+                </Text>
               </Pressable>
             </Link>
           </View>
@@ -115,13 +181,20 @@ export default function HomeScreen() {
       {/* Feature cards */}
       <View style={[styles.features, wide && styles.featuresWide]}>
         {FEATURES.map((f) => (
-          <View key={f.href} style={[styles.card, wide && styles.cardWide]}>
+          <View
+            key={f.href}
+            style={[
+              styles.card,
+              wide && styles.cardWide,
+              { backgroundColor: p.cardBg, borderColor: p.cardBorder },
+            ]}
+          >
             <Text style={styles.cardEmoji}>{f.emoji}</Text>
-            <Text style={styles.cardTitle}>{f.title}</Text>
-            <Text style={styles.cardSubtitle}>{f.subtitle}</Text>
+            <Text style={[styles.cardTitle, { color: p.cardTitle }]}>{f.title}</Text>
+            <Text style={[styles.cardSubtitle, { color: p.cardSub }]}>{f.subtitle}</Text>
             <Link href={f.href} asChild>
-              <Pressable style={styles.cardCta}>
-                <Text style={styles.cardCtaText}>{f.cta}</Text>
+              <Pressable style={StyleSheet.flatten([styles.cardCta, { backgroundColor: p.ctaBg }])}>
+                <Text style={[styles.cardCtaText, { color: p.ctaText }]}>{f.cta}</Text>
               </Pressable>
             </Link>
           </View>
@@ -154,6 +227,16 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: theme.spacing(2.5),
   },
+  navRight: { flexDirection: "row", alignItems: "center", gap: theme.spacing(1.5) },
+  themeToggle: {
+    width: 40,
+    height: 40,
+    borderRadius: 999,
+    borderWidth: 1,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  themeToggleIcon: { fontSize: 18 },
   navLink: {
     fontSize: 15,
     fontFamily: theme.fonts.bodyMedium,

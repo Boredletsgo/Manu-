@@ -51,7 +51,7 @@ export default function HomeScreen() {
     >
       <View style={styles.hero}>
         <Text style={styles.wave}>👋</Text>
-        <Text style={styles.title}>Welcome to ASL Learning</Text>
+        <Text style={styles.title}>Manuō</Text>
         <Text style={styles.subtitle}>
           Master American Sign Language with an AI tutor, interactive lessons,
           and quizzes.

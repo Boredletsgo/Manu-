@@ -24,6 +24,7 @@ export default function TabsLayout() {
         options={{
           title: "Manuō",
           tabBarLabel: "Home",
+          headerShown: false,
           tabBarIcon: ({ color }) => <TabIcon emoji="🏠" color={color} />,
         }}
       />

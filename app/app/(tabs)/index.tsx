@@ -1,121 +1,236 @@
 import { Link } from "expo-router";
+import { LinearGradient } from "expo-linear-gradient";
 import {
   Pressable,
   ScrollView,
   StyleSheet,
   Text,
+  useWindowDimensions,
   View,
 } from "react-native";
 
 import { theme } from "../../lib/theme";
 
+type Route = "/" | "/learn" | "/chat" | "/quiz" | "/progress";
+
+const NAV_LINKS: { href: Route; label: string }[] = [
+  { href: "/", label: "Home" },
+  { href: "/learn", label: "Learn" },
+  { href: "/chat", label: "AI Tutor" },
+  { href: "/quiz", label: "Quiz" },
+  { href: "/progress", label: "Progress" },
+];
+
 interface FeatureCard {
-  href: "/learn" | "/chat" | "/quiz" | "/progress";
+  href: Route;
   emoji: string;
   title: string;
   subtitle: string;
+  cta: string;
 }
 
 const FEATURES: FeatureCard[] = [
   {
     href: "/learn",
-    emoji: "📚",
+    emoji: "🤟",
     title: "Learn Signs",
     subtitle: "Browse the alphabet, numbers, and common phrases.",
+    cta: "View Lessons",
   },
   {
     href: "/chat",
-    emoji: "💬",
-    title: "AI Tutor",
-    subtitle: "Ask anything about ASL and get instant guidance.",
+    emoji: "🤖",
+    title: "Meet Your AI Tutor",
+    subtitle: "Personalized AI tutoring and interactive guidance.",
+    cta: "Open AI Chat",
   },
   {
     href: "/quiz",
     emoji: "🧠",
-    title: "Quiz Yourself",
-    subtitle: "Test your memory with flashcard-style questions.",
-  },
-  {
-    href: "/progress",
-    emoji: "📈",
-    title: "Track Progress",
-    subtitle: "See the signs you've learned and your quiz scores.",
+    title: "Test Your Skills",
+    subtitle: "Flashcards and quizzes to assess what you've learned.",
+    cta: "Take a Quiz",
   },
 ];
 
 export default function HomeScreen() {
+  const { width } = useWindowDimensions();
+  const wide = width >= 860;
+
   return (
     <ScrollView
       style={styles.screen}
-      contentContainerStyle={styles.content}
+      contentContainerStyle={[styles.content, wide && styles.contentWide]}
     >
-      <View style={styles.hero}>
-        <Text style={styles.wave}>👋</Text>
-        <Text style={styles.title}>Manuō</Text>
-        <Text style={styles.subtitle}>
-          Master American Sign Language with an AI tutor, interactive lessons,
-          and quizzes.
-        </Text>
+      {/* Top nav bar */}
+      <View style={styles.nav}>
+        <View style={styles.brand}>
+          <Text style={styles.brandMark}>🤟</Text>
+          <Text style={styles.brandName}>Manuō</Text>
+        </View>
+        {wide ? (
+          <View style={styles.navLinks}>
+            {NAV_LINKS.map((l) => (
+              <Link key={l.href} href={l.href} asChild>
+                <Pressable>
+                  <Text style={styles.navLink}>{l.label}</Text>
+                </Pressable>
+              </Link>
+            ))}
+            <Link href="/learn" asChild>
+              <Pressable style={styles.navCta}>
+                <Text style={styles.navCtaText}>Get Started</Text>
+              </Pressable>
+            </Link>
+          </View>
+        ) : null}
       </View>
 
-      {FEATURES.map((f) => (
-        <Link key={f.href} href={f.href} asChild>
-          <Pressable style={styles.card}>
+      {/* Hero */}
+      <LinearGradient
+        colors={[theme.colors.heroFrom, theme.colors.heroTo]}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        style={styles.hero}
+      >
+        <View style={[styles.heroInner, wide && styles.heroInnerWide]}>
+          <View style={[styles.heroText, wide && styles.heroTextWide]}>
+            <Text style={[styles.heroTitle, wide && styles.heroTitleWide]}>
+              Discover the visual language of connection
+            </Text>
+            <Text style={styles.heroSubtitle}>
+              Master ASL with personalized AI tutoring and interactive lessons.
+            </Text>
+            <Link href="/learn" asChild>
+              <Pressable style={styles.heroCta}>
+                <Text style={styles.heroCtaText}>Start Learning for Free</Text>
+              </Pressable>
+            </Link>
+          </View>
+          <View style={styles.heroArt}>
+            <Text style={styles.heroArtEmoji}>🧏🏽‍♀️🤟🧏🏻‍♂️</Text>
+            <Text style={styles.heroArtEmojiSm}>👋 🙌 🫶</Text>
+          </View>
+        </View>
+      </LinearGradient>
+
+      {/* Feature cards */}
+      <View style={[styles.features, wide && styles.featuresWide]}>
+        {FEATURES.map((f) => (
+          <View key={f.href} style={[styles.card, wide && styles.cardWide]}>
             <Text style={styles.cardEmoji}>{f.emoji}</Text>
-            <View style={styles.cardText}>
-              <Text style={styles.cardTitle}>{f.title}</Text>
-              <Text style={styles.cardSubtitle}>{f.subtitle}</Text>
-            </View>
-            <Text style={styles.chevron}>›</Text>
-          </Pressable>
-        </Link>
-      ))}
+            <Text style={styles.cardTitle}>{f.title}</Text>
+            <Text style={styles.cardSubtitle}>{f.subtitle}</Text>
+            <Link href={f.href} asChild>
+              <Pressable style={styles.cardCta}>
+                <Text style={styles.cardCtaText}>{f.cta}</Text>
+              </Pressable>
+            </Link>
+          </View>
+        ))}
+      </View>
     </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: theme.colors.background },
-  content: { padding: theme.spacing(2), gap: theme.spacing(1.5) },
-  hero: {
-    backgroundColor: theme.colors.primary,
-    borderRadius: theme.radius,
+  content: { padding: theme.spacing(2), gap: theme.spacing(2) },
+  contentWide: {
+    width: "100%",
+    maxWidth: 1100,
+    alignSelf: "center",
     padding: theme.spacing(3),
-    marginBottom: theme.spacing(1),
   },
-  wave: { fontSize: 40 },
-  title: {
-    fontSize: 26,
-    fontWeight: "800",
-    color: "#fff",
-    marginTop: theme.spacing(1),
-  },
-  subtitle: {
-    fontSize: 15,
-    color: "#e0e7ff",
-    marginTop: theme.spacing(1),
-    lineHeight: 22,
-  },
-  card: {
+
+  // Nav
+  nav: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: theme.colors.card,
-    borderRadius: theme.radius,
-    padding: theme.spacing(2),
+    justifyContent: "space-between",
+    flexWrap: "wrap",
+    gap: theme.spacing(1),
+  },
+  brand: { flexDirection: "row", alignItems: "center", gap: 8 },
+  brandMark: { fontSize: 26 },
+  brandName: { fontSize: 24, fontWeight: "800", color: theme.colors.heading },
+  navLinks: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: theme.spacing(2.5),
+  },
+  navLink: { fontSize: 15, fontWeight: "600", color: theme.colors.text },
+  navCta: {
+    backgroundColor: theme.colors.primaryDark,
+    paddingHorizontal: 18,
+    paddingVertical: 10,
+    borderRadius: 999,
+  },
+  navCtaText: { color: "#fff", fontWeight: "700" },
+
+  // Hero
+  hero: { borderRadius: 24, overflow: "hidden" },
+  heroInner: { padding: theme.spacing(3), gap: theme.spacing(2) },
+  heroInnerWide: {
+    flexDirection: "row",
+    alignItems: "center",
+    padding: theme.spacing(5),
+  },
+  heroText: { gap: theme.spacing(1.5) },
+  heroTextWide: { flex: 1, paddingRight: theme.spacing(3) },
+  heroTitle: {
+    fontSize: 30,
+    lineHeight: 38,
+    fontWeight: "800",
+    color: theme.colors.heading,
+  },
+  heroTitleWide: { fontSize: 44, lineHeight: 52 },
+  heroSubtitle: {
+    fontSize: 16,
+    lineHeight: 24,
+    color: "#33635c",
+    maxWidth: 460,
+  },
+  heroCta: {
+    alignSelf: "flex-start",
+    backgroundColor: theme.colors.primaryDark,
+    paddingHorizontal: 22,
+    paddingVertical: 14,
+    borderRadius: 999,
+    marginTop: theme.spacing(1),
+  },
+  heroCtaText: { color: "#fff", fontWeight: "700", fontSize: 16 },
+  heroArt: { alignItems: "center", justifyContent: "center", gap: 8 },
+  heroArtEmoji: { fontSize: 56 },
+  heroArtEmojiSm: { fontSize: 30, letterSpacing: 4 },
+
+  // Features
+  features: { gap: theme.spacing(2) },
+  featuresWide: { flexDirection: "row", alignItems: "stretch" },
+  card: {
+    backgroundColor: theme.colors.feature,
+    borderRadius: 20,
+    padding: theme.spacing(3),
     borderWidth: 1,
     borderColor: theme.colors.border,
+    gap: 8,
   },
-  cardEmoji: { fontSize: 30, marginRight: theme.spacing(2) },
-  cardText: { flex: 1 },
+  cardWide: { flex: 1 },
+  cardEmoji: { fontSize: 44 },
   cardTitle: {
-    fontSize: 17,
-    fontWeight: "700",
-    color: theme.colors.text,
+    fontSize: 20,
+    fontWeight: "800",
+    color: theme.colors.heading,
+    marginTop: 4,
   },
-  cardSubtitle: {
-    fontSize: 13,
-    color: theme.colors.muted,
-    marginTop: 2,
+  cardSubtitle: { fontSize: 14, lineHeight: 20, color: theme.colors.muted },
+  cardCta: {
+    alignSelf: "flex-start",
+    backgroundColor: theme.colors.primaryDark,
+    paddingHorizontal: 18,
+    paddingVertical: 11,
+    borderRadius: 999,
+    marginTop: theme.spacing(1.5),
   },
-  chevron: { fontSize: 28, color: theme.colors.muted },
+  cardCtaText: { color: "#fff", fontWeight: "700" },
 });

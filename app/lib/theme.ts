@@ -16,6 +16,15 @@ export const theme = {
     success: "#16a34a",
     danger: "#dc2626",
   },
+  fonts: {
+    logo: "Comfortaa",
+    heading: "Outfit",
+    headingExtra: "Outfit",
+    body: "Inter",
+    bodyMedium: "Inter",
+    bodySemiBold: "Inter",
+    bodyBold: "Inter",
+  },
   radius: 16,
   spacing: (n: number) => n * 8,
 };

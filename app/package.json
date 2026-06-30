@@ -9,9 +9,13 @@
     "web": "expo start --web"
   },
   "dependencies": {
+    "@expo-google-fonts/comfortaa": "^0.4.2",
+    "@expo-google-fonts/inter": "^0.4.2",
+    "@expo-google-fonts/outfit": "^0.4.3",
     "@react-native-async-storage/async-storage": "1.23.1",
     "expo": "~51.0.28",
     "expo-constants": "~16.0.2",
+    "expo-font": "~12.0.10",
     "expo-linear-gradient": "~13.0.2",
     "expo-linking": "~6.3.1",
     "expo-router": "~3.5.23",

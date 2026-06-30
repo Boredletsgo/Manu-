@@ -153,20 +153,31 @@ const styles = StyleSheet.create({
   },
   brand: { flexDirection: "row", alignItems: "center", gap: 8 },
   brandMark: { fontSize: 26 },
-  brandName: { fontSize: 24, fontWeight: "800", color: theme.colors.heading },
+  brandName: {
+    fontSize: 24,
+    fontFamily: theme.fonts.logo,
+    fontWeight: "600",
+    letterSpacing: 0.6,
+    color: theme.colors.heading,
+  },
   navLinks: {
     flexDirection: "row",
     alignItems: "center",
     gap: theme.spacing(2.5),
   },
-  navLink: { fontSize: 15, fontWeight: "600", color: theme.colors.text },
+  navLink: {
+    fontSize: 15,
+    fontFamily: theme.fonts.bodyMedium,
+    fontWeight: "500",
+    color: theme.colors.text,
+  },
   navCta: {
     backgroundColor: theme.colors.primaryDark,
     paddingHorizontal: 18,
     paddingVertical: 10,
     borderRadius: 999,
   },
-  navCtaText: { color: "#fff", fontWeight: "700" },
+  navCtaText: { color: "#fff", fontFamily: theme.fonts.bodySemiBold, fontWeight: "600" },
 
   // Hero
   hero: { borderRadius: 24, overflow: "hidden" },
@@ -181,6 +192,7 @@ const styles = StyleSheet.create({
   heroTitle: {
     fontSize: 30,
     lineHeight: 38,
+    fontFamily: theme.fonts.headingExtra,
     fontWeight: "800",
     color: theme.colors.heading,
   },
@@ -188,6 +200,7 @@ const styles = StyleSheet.create({
   heroSubtitle: {
     fontSize: 16,
     lineHeight: 24,
+    fontFamily: theme.fonts.body,
     color: "#33635c",
     maxWidth: 460,
   },
@@ -199,7 +212,12 @@ const styles = StyleSheet.create({
     borderRadius: 999,
     marginTop: theme.spacing(1),
   },
-  heroCtaText: { color: "#fff", fontWeight: "700", fontSize: 16 },
+  heroCtaText: {
+    color: "#fff",
+    fontFamily: theme.fonts.bodySemiBold,
+    fontWeight: "600",
+    fontSize: 16,
+  },
   heroArt: { alignItems: "center", justifyContent: "center", gap: 8 },
   heroArtEmoji: { fontSize: 56 },
   heroArtEmojiSm: { fontSize: 30, letterSpacing: 4 },
@@ -219,11 +237,17 @@ const styles = StyleSheet.create({
   cardEmoji: { fontSize: 44 },
   cardTitle: {
     fontSize: 20,
-    fontWeight: "800",
+    fontFamily: theme.fonts.heading,
+    fontWeight: "700",
     color: theme.colors.heading,
     marginTop: 4,
   },
-  cardSubtitle: { fontSize: 14, lineHeight: 20, color: theme.colors.muted },
+  cardSubtitle: {
+    fontSize: 14,
+    lineHeight: 20,
+    fontFamily: theme.fonts.body,
+    color: theme.colors.muted,
+  },
   cardCta: {
     alignSelf: "flex-start",
     backgroundColor: theme.colors.primaryDark,
@@ -232,5 +256,5 @@ const styles = StyleSheet.create({
     borderRadius: 999,
     marginTop: theme.spacing(1.5),
   },
-  cardCtaText: { color: "#fff", fontWeight: "700" },
+  cardCtaText: { color: "#fff", fontFamily: theme.fonts.bodySemiBold, fontWeight: "600" },
 });

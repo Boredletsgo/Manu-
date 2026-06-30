@@ -14,9 +14,10 @@ export default function TabsLayout() {
       screenOptions={{
         headerStyle: { backgroundColor: theme.colors.primary },
         headerTintColor: "#fff",
-        headerTitleStyle: { fontWeight: "700" },
+        headerTitleStyle: { fontFamily: theme.fonts.heading, fontWeight: "700" },
         tabBarActiveTintColor: theme.colors.primary,
         tabBarInactiveTintColor: theme.colors.muted,
+        tabBarLabelStyle: { fontFamily: theme.fonts.bodyMedium, fontSize: 11 },
       }}
     >
       <Tabs.Screen
